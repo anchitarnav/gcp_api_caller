@@ -1,0 +1,42 @@
+{% extends "base.html.jinja" %}
+
+{% block details_1 %}
+
+
+<div class="container-fluid">
+
+
+    <form method="post">
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                <label for="request_url">Request URL</label>
+                <input type="text" class="form-control" id="request_url" name="request_url">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="request_type">Request Type</label>
+                <select id="request_type" name="request_type" class="form-control">
+                    <option selected>GET</option>
+                    <option>POST</option>
+                </select>
+            </div>
+            <div class="form-group col-md-1">
+                <label for="make_request">.</label>
+                <input type="submit" class="form-control btn btn-primary" id="make_request" name="make_request">
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <p class="font-weight-bold">Response Code: {{res_code}}</p>
+            <p class="font-weight-light">{{res_text}}</p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock details_1 %}
