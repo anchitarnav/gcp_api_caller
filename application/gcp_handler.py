@@ -16,6 +16,15 @@ class AuthorisationType(Enum):
     USER_AUTH = auto()
 
 
+def check_valid_creds(json_string):
+    try:
+        json.loads(json_string)
+    except json.JSONDecodeError:
+        return False, "Illegal/ Malformed JSON"
+    else:
+        return True, "Credential validation Successful"
+
+
 def get_authorised_session(authorisation_type, key_contents=None):
     if authorisation_type is AuthorisationType.SERVICE_ACCOUNT and not key_contents:
         raise ApplicationException('Key Contents empty or not passed')

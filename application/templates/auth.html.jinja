@@ -1,0 +1,55 @@
+{% extends "base.html.jinja" %}
+
+{% block additional_styles %}
+
+<script>
+    $(document).ready(function(){
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            var label_name = document.getElementById("selected_file_label");
+            label_name.innerHTML = fileName
+        });
+    });
+</script>
+
+{% endblock additional_styles %}
+
+
+{% block details_1 %}
+
+
+<div class="container-fluid">
+
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group col-md-9 custom-file">
+                <label id = "selected_file_label" for="cred_file" class="custom-file-label">Select the service accounts credentials.json</label>
+                <input type="file" class="form-control custom-file-input" id="cred_file" name="cred_file" accept="application/json" required>
+            </div>
+            <div class="form-group col-md-3">
+                <input type="submit" class="form-control btn btn-primary" id="make_request" name="make_request">
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            {% if is_cred_valid == True %}
+                <p class="font-weight-bold">Credential Validation: ✅ Success</p>
+            {% elif is_cred_valid ==  False %}
+                <p class="font-weight-bold">Credential Validation: ❌ Failed</p>
+            {% else %}
+                <p class="font-weight-bold">Credential Validation: ❓ UNKNOWN</p>
+            {% endif %}
+            <p class="font-weight-light">{{message}}</p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock details_1 %}
