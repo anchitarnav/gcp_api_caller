@@ -17,6 +17,8 @@ class AuthorisationType(Enum):
 
 
 def check_valid_creds(json_string):
+    if not json_string:
+        return False, "No cred info present"
     try:
         json.loads(json_string)
     except json.JSONDecodeError:

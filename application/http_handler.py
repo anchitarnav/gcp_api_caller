@@ -1,11 +1,20 @@
 import flask
 import application.gcp_handler as gcp
 from flask_session import Session
+from secrets import token_urlsafe
 
+# Main Application
 app = flask.Flask(__name__)
+
+# Configurations
 SESSION_TYPE = 'filesystem'
+SESSION_PERMANENT = False
+SESSION_USE_SIGNER = True
+
+# Flask-Session stuff
 app.config.from_object(__name__)
 Session(app)
+flask.Flask.secret_key = token_urlsafe(16)
 
 
 @app.route('/')
@@ -15,9 +24,14 @@ def index():
 
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
+    print("Session ID => ", id(flask.session))
+    key_contents = flask.session.get('key_contents')
+    is_cred_valid, message = gcp.check_valid_creds(key_contents)
     if flask.request.method == 'GET':
         return flask.render_template(
-            'auth.html.jinja'
+            'auth.html.jinja',
+            is_cred_valid=is_cred_valid,
+            message=message
         )
     service_account_cred_file = flask.request.files.get('cred_file')
     if not service_account_cred_file:
@@ -36,6 +50,7 @@ def auth():
 
 @app.route('/request', methods=['GET', 'POST'])
 def request():
+    print("Session ID => ", id(flask.session))
     key_contents = flask.session.get('key_contents')
     if not key_contents:
         return flask.redirect(flask.url_for('.auth'))
