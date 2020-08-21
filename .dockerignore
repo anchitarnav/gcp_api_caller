@@ -2,3 +2,4 @@ venv/
 .gitignore
 README.md
 flask_session/
+.git/
