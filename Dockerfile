@@ -30,4 +30,6 @@ ADD . /root
 WORKDIR /root
 RUN pip install -r requirements.txt
 
-CMD ["python3", "app.py"]
+ENV PORT=80
+
+CMD ["/usr/bin/python3", "app.py"]
