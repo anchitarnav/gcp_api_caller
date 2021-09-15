@@ -10,18 +10,28 @@
         <div class="form-row">
             <div class="form-group col-md-9">
                 <label for="request_url">Request URL</label>
-                <input type="text" class="form-control" id="request_url" name="request_url">
+                <input type="text" class="form-control" id="request_url" name="request_url" value="{{request_url}}">
             </div>
             <div class="form-group col-md-2">
                 <label for="request_type">Request Type</label>
                 <select id="request_type" name="request_type" class="form-control">
                     <option selected>GET</option>
                     <option>POST</option>
+                    <option>PATCH</option>
+                    <option>DELETE</option>
                 </select>
             </div>
             <div class="form-group col-md-1">
                 <label for="make_request">.</label>
                 <input type="submit" class="form-control btn btn-primary" id="make_request" name="make_request">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                <label for="request_body">Request Body</label>
+                <input type="text" class="form-control" id="request_body" name="request_body"
+                       value='{{request_body}}'>
             </div>
         </div>
     </form>

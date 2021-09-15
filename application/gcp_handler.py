@@ -42,13 +42,21 @@ def get_authorised_session(authorisation_type, key_contents=None):
     return AuthorizedSession(scoped_credentials)
 
 
-def make_request(request_type: GoogleRequests, auth_session: AuthorizedSession, request_url: str, params=None):
+def make_request(request_type: str, auth_session: AuthorizedSession, request_url: str, data: dict = None):
     """
     :param request_url:
     :param request_type:
     :param auth_session:
-    :param params:
+    :param data:
     :return:
     """
-    res = getattr(auth_session, request_type.value)(request_url)
+    request_params = {
+        'method': request_type,
+        'url': request_url,
+    }
+
+    if data:
+        request_params['data'] = data
+
+    res = auth_session.request(**request_params)
     return res.status_code, res.text

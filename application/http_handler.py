@@ -16,6 +16,8 @@ app.config.from_object(__name__)
 Session(app)
 flask.Flask.secret_key = token_urlsafe(16)
 
+REQUEST_TEMPLATE = 'request.html.jinja'
+
 
 @app.route('/')
 def index():
@@ -50,29 +52,31 @@ def auth():
 
 @app.route('/request', methods=['GET', 'POST'])
 def request():
-    print("Session ID => ", id(flask.session))
     key_contents = flask.session.get('key_contents')
     if not key_contents:
         return flask.redirect(flask.url_for('.auth'))
 
     if flask.request.method == 'GET':
-        return flask.render_template(
-            'request.html.jinja'
-        )
+        return flask.render_template(REQUEST_TEMPLATE)
 
     auth_session = gcp.get_authorised_session(
         authorisation_type=gcp.AuthorisationType.SERVICE_ACCOUNT,
         key_contents=key_contents
     )
 
-    request_url = flask.request.form.get('request_url')
-    request_type = getattr(gcp.GoogleRequests, flask.request.form.get('request_type', 'UNKNOWN_REQUEST'), None)
-    if not request_type:
-        raise Exception('Illegal Request type')
-    res_code, res_text = gcp.make_request(request_type=gcp.GoogleRequests.GET, auth_session=auth_session,
-                                          request_url=request_url)
+    request_url: str = flask.request.form['request_url']
+    request_type: str = flask.request.form['request_type'].upper()
+
+    request_body: str = flask.request.form['request_body'].strip()
+
+    res_code, res_text = gcp.make_request(
+        request_type=request_type, auth_session=auth_session, request_url=request_url, data=request_body)
+
     return flask.render_template(
-        'request.html.jinja',
+        REQUEST_TEMPLATE,
         res_code=res_code,
-        res_text=res_text
+        res_text=res_text,
+        request_url=request_url,
+        request_type=request_type,
+        request_body=request_body
     )
